@@ -285,14 +285,19 @@ const App_ar: React.FC<{
                           <h3 className="font-bold text-xl text-[#4A2C5A]">{translateBranchName(branch.name)}</h3>
                           <div className="mt-4">
                               <p className="text-sm text-[#4A2C5A]/60 font-semibold uppercase tracking-wider">الهدف السنوي</p>
-                              <p className="text-2xl font-bold text-[#2A5B64] mt-1">
-                                  {formatCurrency(branch.targetYearlyRevenue.min)} - {formatCurrency(branch.targetYearlyRevenue.max)}
-                              </p>
+                              <div className="mt-1 flex flex-col sm:flex-row sm:items-baseline justify-center sm:gap-2">
+                                <span className="text-xl sm:text-2xl font-bold text-[#2A5B64]">{formatCurrency(branch.targetYearlyRevenue.min)}</span>
+                                <span className="text-base sm:text-lg text-[#4A2C5A]/70 mx-1 sm:mx-0">إلى</span>
+                                <span className="text-xl sm:text-2xl font-bold text-[#2A5B64]">{formatCurrency(branch.targetYearlyRevenue.max)}</span>
+                              </div>
                           </div>
                           <div className="mt-3">
-                              <p className="text-sm text-[#4A2C5A]/60 font-semibold uppercase tracking-wider">الهدف الشهري</p>                              <p className="text-lg text-[#4A2C5A]/80 font-semibold mt-1">
-                                  {formatCurrency(branch.targetYearlyRevenue.min / 12)} - {formatCurrency(branch.targetYearlyRevenue.max / 12)}
-                              </p>
+                              <p className="text-sm text-[#4A2C5A]/60 font-semibold uppercase tracking-wider">الهدف الشهري</p>
+                              <div className="mt-1 flex flex-col sm:flex-row sm:items-baseline justify-center sm:gap-2">
+                                <span className="text-md sm:text-lg font-semibold text-[#4A2C5A]/80">{formatCurrency(branch.targetYearlyRevenue.min / 12)}</span>
+                                <span className="text-sm sm:text-base text-[#4A2C5A]/70 mx-1 sm:mx-0">إلى</span>
+                                <span className="text-md sm:text-lg font-semibold text-[#4A2C5A]/80">{formatCurrency(branch.targetYearlyRevenue.max / 12)}</span>
+                              </div>
                           </div>
                       </div>
                   ))}
@@ -356,6 +361,7 @@ const App_ar: React.FC<{
            <button 
             onClick={() => setIsModalOpen(true)}
             title="إضافة حجز جديد"
+            aria-label="إضافة حجز جديد"
             className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/80 text-gray-600 hover:bg-white shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
           >
             <PlusIcon />
@@ -371,6 +377,7 @@ const App_ar: React.FC<{
           <button 
             onClick={handleUploadClick}
             title="تحميل جدول البيانات"
+            aria-label="تحميل جدول البيانات"
             className="absolute bottom-4 right-16 w-10 h-10 rounded-full bg-red-100 text-red-600 hover:bg-red-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
           >
             <UploadIcon />
