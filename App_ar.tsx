@@ -263,7 +263,7 @@ const App_ar: React.FC<{
           </div>
         </FadeInUp>
 
-        <Section title="نظرة عامة على الإشغال" titleColor="text-[#4A2C5A]">
+        <Section title="نظرة عامة على الإشغال" titleColor="text-[#4A2C5A]" className="!mt-0 !pt-8">
           <StaggeredGrid>
             <AnimatedItem>
               <OccupancyRadial 
@@ -277,7 +277,7 @@ const App_ar: React.FC<{
               <OccupancyRadial 
                 percentage={90} 
                 label="توقعات الإشغال (١٢ شهرًا)" 
-                subLabel="توقعات بالحفاظ على معدل ٢٣/٢٦" 
+                subLabel="من المتوقع الحفاظ على إشغال ٢٣ من أصل ٢٦ وحدة شهرياً للعام القادم" 
                 color="#2A5B64" 
               />
             </AnimatedItem>
