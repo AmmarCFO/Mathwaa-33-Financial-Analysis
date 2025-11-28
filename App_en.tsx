@@ -1,5 +1,6 @@
+
 import React, { useState, useRef } from 'react';
-import { SOCIAL_MEDIA_VIDEOS } from './constants';
+import { MATHWAA_SHARE_PERCENTAGE, SOCIAL_MEDIA_VIDEOS } from './constants';
 import { Apartment, ApartmentStatus, ApartmentType, type Branch, type NewBooking } from './types';
 import Header from './components/Header';
 import ApartmentTable from './components/ApartmentTable';
@@ -8,8 +9,8 @@ import BranchComparisonChart from './components/BranchComparisonChart';
 import BookingSourceChart from './components/BookingSourceChart';
 import AddBookingModal from './components/AddBookingModal';
 import { PlusIcon, UploadIcon } from './components/Icons';
-import { FadeInUp } from './components/AnimatedWrappers';
-import { Section, Metric } from './components/DashboardComponents';
+import { FadeInUp, StaggeredGrid, AnimatedItem } from './components/AnimatedWrappers';
+import { Section, Metric, ShareBreakdown, OccupancyRadial } from './components/DashboardComponents';
 
 
 const App_en: React.FC<{ 
@@ -245,13 +246,42 @@ const App_en: React.FC<{
         </FadeInUp>
 
         <FadeInUp>
-          <div className="text-center pb-24">
+          <div className="text-center pb-8">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#4A2C5A] leading-tight">
               Property Performance Report
             </h1>
             <p className="text-lg sm:text-xl text-[#4A2C5A]/80 mt-4">A comprehensive overview for our valued property owner.</p>
           </div>
         </FadeInUp>
+
+        <Section title="Occupancy & Forecast" titleColor="text-[#4A2C5A]">
+          <StaggeredGrid>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={90} 
+                label="Current Occupancy" 
+                subLabel="23 out of 26 Apartments Rented" 
+                color="#2A5B64" 
+              />
+            </AnimatedItem>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={90} 
+                label="12-Month Forecast" 
+                subLabel="Projected to maintain 23/26 utilization" 
+                color="#2A5B64" 
+              />
+            </AnimatedItem>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={10} 
+                label="Short Term Opportunity" 
+                subLabel="3 Units Reserved for High-Yield STR" 
+                color="#8A6E99" 
+              />
+            </AnimatedItem>
+          </StaggeredGrid>
+        </Section>
 
         <Section title="Target Annual Revenue" className="bg-gradient-to-br from-[#4A2C5A] to-[#3b2247] rounded-3xl shadow-2xl">
             <FadeInUp>
@@ -261,7 +291,7 @@ const App_en: React.FC<{
                           <p className="text-sm text-[#F1ECE6]/70 tracking-wide uppercase">Low End</p>
                           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">{formatCurrency(totalTargetYearlyRevenue.min)}</p>
                       </div>
-                      <div className="text-2xl sm:text-3xl text-white/50 pb-1 sm:pb-2 md:pb-4">~</div>
+                      <div className="text-2xl sm:text-3xl text-white/50 pb-1 sm:pb-2 md:pb-4">to</div>
                       <div className="text-center">
                           <p className="text-sm text-[#F1ECE6]/70 tracking-wide uppercase">High End</p>
                           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">{formatCurrency(totalTargetYearlyRevenue.max)}</p>
@@ -291,15 +321,51 @@ const App_en: React.FC<{
                                 <span className="text-md sm:text-lg font-semibold text-[#4A2C5A]/80">{formatCurrency(branch.targetYearlyRevenue.max / 12)}</span>
                               </div>
                           </div>
+                           <div className="mt-4 pt-4 border-t border-[#4A2C5A]/20">
+                              <p className="text-sm text-[#4A2C5A]/60 font-semibold uppercase tracking-wider">Monthly Share Breakdown</p>
+                              <div className="mt-2 text-xs text-left grid grid-cols-2 gap-x-4 gap-y-2">
+                                  <div>
+                                      <p className="font-bold text-[#4A2C5A]">Mathwaa's Share</p>
+                                      <p className="text-[#4A2C5A]/80">{formatCurrency((branch.targetYearlyRevenue.min / 12) * MATHWAA_SHARE_PERCENTAGE)} to {formatCurrency((branch.targetYearlyRevenue.max / 12) * MATHWAA_SHARE_PERCENTAGE)}</p>
+                                  </div>
+                                  <div>
+                                      <p className="font-bold text-[#4A2C5A]">Investor's Share</p>
+                                      <p className="text-[#4A2C5A]/80">{formatCurrency((branch.targetYearlyRevenue.min / 12) * (1 - MATHWAA_SHARE_PERCENTAGE))} to {formatCurrency((branch.targetYearlyRevenue.max / 12) * (1 - MATHWAA_SHARE_PERCENTAGE))}</p>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                   ))}
               </div>
+            </FadeInUp>
+            <FadeInUp>
+              <ShareBreakdown
+                title="Annual Share Distribution"
+                totalValue={totalTargetYearlyRevenue}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="Mathwaa's Share"
+                investorLabel="Investor's Share"
+                formatCurrency={formatCurrency}
+                className="text-white"
+                valueClassName="text-xl sm:text-2xl"
+              />
             </FadeInUp>
         </Section>
         
         <Section title="Cash Collections" titleColor="text-[#4A2C5A]">
             <FadeInUp>
               <Metric value={formatCurrency(totalCashCollected)} label="A real-time look at revenue received from our tenants." valueColor="text-[#4A2C5A]" labelColor="text-[#4A2C5A]/80"/>
+            </FadeInUp>
+             <FadeInUp>
+              <ShareBreakdown
+                title="Share Distribution"
+                totalValue={totalCashCollected}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="Mathwaa's Share"
+                investorLabel="Investor's Share"
+                formatCurrency={formatCurrency}
+                className="text-[#4A2C5A]"
+              />
             </FadeInUp>
             <FadeInUp>
               <div className="mt-16 bg-white/50 p-6 rounded-2xl shadow-xl">
@@ -335,6 +401,17 @@ const App_en: React.FC<{
         <Section title="Current Tenant Lifetime Value" className="bg-gradient-to-br from-[#2A5B64] to-[#1e4248] rounded-3xl shadow-2xl">
             <FadeInUp>
               <Metric value={formatCurrency(totalLifetimeValue)} label="The total value of all current rental contracts, reflecting secured future income." />
+            </FadeInUp>
+            <FadeInUp>
+              <ShareBreakdown
+                title="Share Distribution"
+                totalValue={totalLifetimeValue}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="Mathwaa's Share"
+                investorLabel="Investor's Share"
+                formatCurrency={formatCurrency}
+                className="text-white"
+              />
             </FadeInUp>
         </Section>
         

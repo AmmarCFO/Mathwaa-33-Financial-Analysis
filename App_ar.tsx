@@ -1,4 +1,6 @@
+
 import React, { useState, useRef } from 'react';
+import { MATHWAA_SHARE_PERCENTAGE } from './constants';
 import { SOCIAL_MEDIA_VIDEOS_AR } from './constants_ar';
 import { Apartment, ApartmentStatus, ApartmentType, type Branch, type NewBooking } from './types';
 import Header_ar from './components/Header_ar';
@@ -8,8 +10,8 @@ import BranchComparisonChart_ar from './components/BranchComparisonChart_ar';
 import BookingSourceChart_ar from './components/BookingSourceChart_ar';
 import AddBookingModal_ar from './components/AddBookingModal_ar';
 import { PlusIcon, UploadIcon } from './components/Icons';
-import { FadeInUp } from './components/AnimatedWrappers';
-import { Section, Metric } from './components/DashboardComponents';
+import { FadeInUp, StaggeredGrid, AnimatedItem } from './components/AnimatedWrappers';
+import { Section, Metric, ShareBreakdown, OccupancyRadial } from './components/DashboardComponents';
 
 
 const App_ar: React.FC<{ 
@@ -253,13 +255,42 @@ const App_ar: React.FC<{
         </FadeInUp>
 
         <FadeInUp>
-          <div className="text-center pb-24">
+          <div className="text-center pb-8">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#4A2C5A] leading-tight">
               تقرير أداء العقارات
             </h1>
             <p className="text-lg sm:text-xl text-[#4A2C5A]/80 mt-4">نظرة عامة شاملة لمالك العقار.</p>
           </div>
         </FadeInUp>
+
+        <Section title="نظرة عامة على الإشغال" titleColor="text-[#4A2C5A]">
+          <StaggeredGrid>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={90} 
+                label="نسبة الإشغال الحالية" 
+                subLabel="٢٣ من أصل ٢٦ شقة مؤجرة" 
+                color="#2A5B64" 
+              />
+            </AnimatedItem>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={90} 
+                label="توقعات الإشغال (١٢ شهرًا)" 
+                subLabel="توقعات بالحفاظ على معدل ٢٣/٢٦" 
+                color="#2A5B64" 
+              />
+            </AnimatedItem>
+            <AnimatedItem>
+              <OccupancyRadial 
+                percentage={10} 
+                label="فرص التأجير قصير الأجل" 
+                subLabel="٣ وحدات محجوزة لعوائد عالية" 
+                color="#8A6E99" 
+              />
+            </AnimatedItem>
+          </StaggeredGrid>
+        </Section>
         
         <Section title="الإيرادات السنوية المستهدفة" className="bg-gradient-to-br from-[#4A2C5A] to-[#3b2247] rounded-3xl shadow-2xl">
             <FadeInUp>
@@ -269,7 +300,7 @@ const App_ar: React.FC<{
                           <p className="text-sm text-[#F1ECE6]/70 tracking-wide uppercase">الحد الأدنى</p>
                           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">{formatCurrency(totalTargetYearlyRevenue.min)}</p>
                       </div>
-                      <div className="text-2xl sm:text-3xl text-white/50 pb-1 sm:pb-2 md:pb-4">~</div>
+                      <div className="text-2xl sm:text-3xl text-white/50 pb-1 sm:pb-2 md:pb-4">إلى</div>
                       <div className="text-center">
                           <p className="text-sm text-[#F1ECE6]/70 tracking-wide uppercase">الحد الأعلى</p>
                           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">{formatCurrency(totalTargetYearlyRevenue.max)}</p>
@@ -299,15 +330,51 @@ const App_ar: React.FC<{
                                 <span className="text-md sm:text-lg font-semibold text-[#4A2C5A]/80">{formatCurrency(branch.targetYearlyRevenue.max / 12)}</span>
                               </div>
                           </div>
+                           <div className="mt-4 pt-4 border-t border-[#4A2C5A]/20">
+                              <p className="text-sm text-[#4A2C5A]/60 font-semibold uppercase tracking-wider">توزيع الحصص الشهرية</p>
+                              <div className="mt-2 text-xs text-right grid grid-cols-2 gap-x-4 gap-y-2">
+                                  <div>
+                                      <p className="font-bold text-[#4A2C5A]">حصة مثوى</p>
+                                      <p className="text-[#4A2C5A]/80">{formatCurrency((branch.targetYearlyRevenue.min / 12) * MATHWAA_SHARE_PERCENTAGE)} إلى {formatCurrency((branch.targetYearlyRevenue.max / 12) * MATHWAA_SHARE_PERCENTAGE)}</p>
+                                  </div>
+                                  <div>
+                                      <p className="font-bold text-[#4A2C5A]">حصة المستثمر</p>
+                                      <p className="text-[#4A2C5A]/80">{formatCurrency((branch.targetYearlyRevenue.min / 12) * (1 - MATHWAA_SHARE_PERCENTAGE))} إلى {formatCurrency((branch.targetYearlyRevenue.max / 12) * (1 - MATHWAA_SHARE_PERCENTAGE))}</p>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                   ))}
               </div>
+            </FadeInUp>
+            <FadeInUp>
+              <ShareBreakdown
+                title="توزيع الحصص السنوي"
+                totalValue={totalTargetYearlyRevenue}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="حصة مثوى"
+                investorLabel="حصة المستثمر"
+                formatCurrency={formatCurrency}
+                className="text-white"
+                valueClassName="text-xl sm:text-2xl"
+              />
             </FadeInUp>
         </Section>
         
         <Section title="المبالغ المحصلة" titleColor="text-[#4A2C5A]">
             <FadeInUp>
               <Metric value={formatCurrency(totalCashCollected)} label="نظرة محدثة على الإيرادات المستلمة من المستأجرين." valueColor="text-[#4A2C5A]" labelColor="text-[#4A2C5A]/80"/>
+            </FadeInUp>
+            <FadeInUp>
+              <ShareBreakdown
+                title="توزيع الحصص"
+                totalValue={totalCashCollected}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="حصة مثوى"
+                investorLabel="حصة المستثمر"
+                formatCurrency={formatCurrency}
+                className="text-[#4A2C5A]"
+              />
             </FadeInUp>
             <FadeInUp>
               <div className="mt-16 bg-white/50 p-6 rounded-2xl shadow-xl">
@@ -343,6 +410,17 @@ const App_ar: React.FC<{
         <Section title="القيمة الدائمة للمستأجرين الحاليين" className="bg-gradient-to-br from-[#2A5B64] to-[#1e4248] rounded-3xl shadow-2xl">
             <FadeInUp>
               <Metric value={formatCurrency(totalLifetimeValue)} label="القيمة الإجمالية لجميع عقود الإيجار الحالية، مما يعكس الدخل المستقبلي المضمون." />
+            </FadeInUp>
+             <FadeInUp>
+              <ShareBreakdown
+                title="توزيع الحصص"
+                totalValue={totalLifetimeValue}
+                mathwaaSharePercentage={MATHWAA_SHARE_PERCENTAGE}
+                mathwaaLabel="حصة مثوى"
+                investorLabel="حصة المستثمر"
+                formatCurrency={formatCurrency}
+                className="text-white"
+              />
             </FadeInUp>
         </Section>
         

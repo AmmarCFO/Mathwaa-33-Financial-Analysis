@@ -1,6 +1,8 @@
 
 import { Apartment, ApartmentStatus, ApartmentType, Branch, MarketingVideo } from './types';
 
+export const MATHWAA_SHARE_PERCENTAGE = 0.25;
+
 // Default monthly rents for vacant apartments
 const defaultRents = {
     [ApartmentType.STUDIO]: 2200,
