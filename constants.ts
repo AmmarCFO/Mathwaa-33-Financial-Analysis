@@ -11,7 +11,7 @@ const defaultRents = {
 };
 
 const mathwaa33Apartments: Apartment[] = [
-    { id: '33-001', number: '33-001', type: ApartmentType.ONE_BEDROOM, status: ApartmentStatus.RENTED, monthlyRent: 5800, contractDurationMonths: 1, cashCollected: 5800, howHeard: 'Word of Mouth', lifetimeValue: 5800 },
+    { id: '33-001', number: '33-001', type: ApartmentType.ONE_BEDROOM, status: ApartmentStatus.RENTED, monthlyRent: 5800, contractDurationMonths: 12, cashCollected: 11600, howHeard: 'Word of Mouth', lifetimeValue: 69600 },
     { id: '33-002', number: '33-002', type: ApartmentType.ONE_BEDROOM, status: ApartmentStatus.RENTED, monthlyRent: 6280, contractDurationMonths: 12, cashCollected: 6280, howHeard: 'Word of Mouth', lifetimeValue: 75360 },
     { id: '33-003', number: '33-003', type: ApartmentType.TWO_BEDROOM, status: ApartmentStatus.RENTED, monthlyRent: 6800, contractDurationMonths: 12, cashCollected: 6800, howHeard: 'Word of Mouth', lifetimeValue: 81600 },
     { id: '33-004', number: '33-004', type: ApartmentType.TWO_BEDROOM, status: ApartmentStatus.RENTED, monthlyRent: 7000, contractDurationMonths: 12, cashCollected: 7000, howHeard: 'Word of Mouth', lifetimeValue: 84000 },
